@@ -9,8 +9,8 @@ const openFile = (file) => fs.readFileSync(file, 'utf8'); // abro el archivo y l
 //obtener los links del archivo .md
 const getLinks = (file) => {
     const regexGetLinks = /\[(.+)\]\((https?:\/\/\w+.+)\)/g; // ex. regular que encuentra todos los links en formato .md
-    const links = (openFile(file).match(regexGetLinks)); // devuelvo las coincidencias de la ex. regular aplicada al archivo en un arreglo
-    if(links!=null){ // valido si encontré o no algun link 
+    const links = openFile(file).match(regexGetLinks); // devuelvo las coincidencias de la ex. regular aplicada al archivo en un arreglo
+    if(links){ // valido si encontré o no algun link 
         return links // retorno los links encontrados
     }
 };
@@ -45,7 +45,14 @@ console.log('llamando a getLinks', getLinks(file))
 
 console.log('llamando a getLinksResponseObject', getLinksResponseObject(file))
 
-
-
+module.exports = {
+    validatePathFile,
+    absolute,
+    mdExtention,
+    openFile,
+    getLinks,
+    getLinksResponseObject
+  };
+  
 
 
