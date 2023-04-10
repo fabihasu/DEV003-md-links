@@ -1,5 +1,6 @@
 const fs = require('fs'); //file system
 const path = require('path');// path
+const fetch = require('node-fetch');
 
 const validatePathFile = (file) => fs.existsSync(file); //validar que el archivo existe
 const absolute = (file) => path.isAbsolute(file); //validar si la ruta es absoluta
@@ -31,19 +32,42 @@ const getLinksResponseObject = (file) => {
     return response
 }
 
-const file = './README.md'
+const validateLinks = (response) => {
+    const responseValidated = response.map((item) => {
+        const newItem = fetch(item.href).then((data) => {
+            console.log('la pagina SI funciona', item.href)
+            return {
+                ...item,
+                status: data.status,
+                ok: 'ok'
+            }
+        }).catch((err) => {
+            console.log('la pagina NO funciona', item.href)
+            return {
+                ...item,
+                status: err.status,
+                ok: 'fail'
+            }
+        })
+        console.log('newItem', newItem)
+        return newItem
+    })
+    return responseValidated;
+}
 
-console.log('llamando a validatePathFile', validatePathFile(file))
+// const file = './README.md'
 
-console.log('llamando a absolute', absolute(file))
+// console.log('llamando a validatePathFile', validatePathFile(file))
 
-console.log('llamando a mdExtention', mdExtention(file))
+// console.log('llamando a absolute', absolute(file))
 
-// console.log('llamando a openFile', openFile(file))
+// console.log('llamando a mdExtention', mdExtention(file))
 
-console.log('llamando a getLinks', getLinks(file))
+// // console.log('llamando a openFile', openFile(file))
 
-console.log('llamando a getLinksResponseObject', getLinksResponseObject(file))
+// console.log('llamando a getLinks', getLinks(file))
+
+// console.log('llamando a getLinksResponseObject', getLinksResponseObject(file))
 
 module.exports = {
     validatePathFile,
@@ -51,7 +75,8 @@ module.exports = {
     mdExtention,
     openFile,
     getLinks,
-    getLinksResponseObject
+    getLinksResponseObject,
+    validateLinks
   };
   
 
