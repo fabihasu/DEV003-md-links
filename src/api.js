@@ -35,24 +35,31 @@ const getLinksResponseObject = (file) => {
 const validateLinks = (response) => {
     const responseValidated = response.map((item) => {
         const newItem = fetch(item.href).then((data) => {
-            console.log('la pagina SI funciona', item.href)
-            return {
-                ...item,
-                status: data.status,
-                ok: 'ok'
+            let responseStatusMessage = 'ok';
+            if (data.status >= 400) {
+                responseStatusMessage = 'fail';
             }
-        }).catch((err) => {
-            console.log('la pagina NO funciona', item.href)
-            return {
-                ...item,
-                status: err.status,
+            const newValidatedItem = {
+                href: item.href,
+                text: item.text,
+                file: item.file,
+                status: data.status,
+                ok: responseStatusMessage
+            }
+            return newValidatedItem
+        }).catch(() => {
+            const newValidatedItem = {
+                href: item.href,
+                text: item.text,
+                file: item.file,
+                status: 'ERROR',
                 ok: 'fail'
             }
+            return newValidatedItem;
         })
-        console.log('newItem', newItem)
         return newItem
     })
-    return responseValidated;
+    return Promise.all(responseValidated);
 }
 
 // const file = './README.md'
