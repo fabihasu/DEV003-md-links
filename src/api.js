@@ -4,6 +4,8 @@ const fetch = require('node-fetch');
 
 const validatePathFile = (file) => fs.existsSync(file); //validar que el archivo existe
 const absolute = (file) => path.isAbsolute(file); //validar si la ruta es absoluta
+const transformToAbsolute = (file) => path.resolve(file); //validar si la ruta es absoluta
+
 const mdExtention = (file) => path.extname(file) === '.md'; //validar la extensión de archivo si es MD o no
 const openFile = (file) => fs.readFileSync(file, 'utf8'); // abro el archivo y lo guardo en una variable llamada openFile
 
@@ -35,25 +37,21 @@ const getLinksResponseObject = (file) => {
 const validateLinks = (response) => {
     const responseValidated = response.map((item) => {
         const newItem = fetch(item.href).then((data) => {
-            let responseStatusMessage = 'ok';
-            if (data.status >= 400) {
-                responseStatusMessage = 'fail';
-            }
             const newValidatedItem = {
                 href: item.href,
                 text: item.text,
                 file: item.file,
                 status: data.status,
-                ok: responseStatusMessage
+                ok: data.statusText,
             }
             return newValidatedItem
-        }).catch(() => {
+        }).catch((error) => {
             const newValidatedItem = {
                 href: item.href,
                 text: item.text,
                 file: item.file,
-                status: 'ERROR',
-                ok: 'fail'
+                status: error.status,
+                ok: error.name,
             }
             return newValidatedItem;
         })
@@ -79,6 +77,7 @@ const validateLinks = (response) => {
 module.exports = {
     validatePathFile,
     absolute,
+    transformToAbsolute,
     mdExtention,
     openFile,
     getLinks,

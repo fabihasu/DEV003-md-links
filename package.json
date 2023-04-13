@@ -1,5 +1,5 @@
 {
-  "name": "md-links",
+  "name": "md-links-fabianahasu",
   "version": "0.1.0",
   "engines": {
     "node": ">=16.x"
@@ -20,5 +20,12 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.9"
-  }
+  },
+  "author": "Fabiana Hasu",
+  "license": "ISC",
+  "bin": {
+    "md-links": "./cli.js"
+  },
+  "description": "Una aplicación creada con Node.js que permite la validación de los enlaces presentes en archivos Markdown.",
+  "main": "src/index.js"
 }
