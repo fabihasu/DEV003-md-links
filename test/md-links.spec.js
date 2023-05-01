@@ -78,3 +78,23 @@ describe('getLinksResponseObject', () => {
     expect(response[0]).toEqual({"file": "./README.md", "href": "https://es.wikipedia.org/wiki/Markdown", "text": "Markdown"});
   });
 });
+
+describe('validateLinks', () => {
+  it('should return validated item object', async () => {
+    const response = await mdLinks.validateLinks([
+      {
+        "file": "./README.md", 
+        "href": "https://es.wikipedia.org/wiki/Markdown", 
+        "text": "Markdown"
+      }
+    ]);
+    const expectedResponse = {
+      href: "https://es.wikipedia.org/wiki/Markdown",
+      text: "Markdown",
+      file: "./README.md",
+      status: 200,
+      ok: "OK",
+  }
+    expect(response[0]).toEqual(expectedResponse);
+  });
+});
